@@ -97,12 +97,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  BMS_wakeUpChain();
-	  BMS_readSerialID(); //test this first
-	  HAL_Delay(100);
+//	  BMS_wakeUpChain();
+//	  BMS_readSerialID(); //test this first
+//	  HAL_Delay(100);
 	  //BMS_startCellConversions(NON_REDUNDANT_MODE, CONTINOUS_MODE, DISCHARGE_DISABLED, FILTER_RESET, CELL_OPEN_WIRE_DISABLED);
 	  //HAL_Delay(100);
 	  //BMS_readVoltages();
+	  HAL_GPIO_TogglePin(MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -202,10 +204,15 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PORTA_CS_GPIO_Port, PORTA_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PORTA_CS_Pin */
   GPIO_InitStruct.Pin = PORTA_CS_Pin;
@@ -213,6 +220,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(PORTA_CS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MCU_HEARTBEAT_LED_Pin */
+  GPIO_InitStruct.Pin = MCU_HEARTBEAT_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(MCU_HEARTBEAT_LED_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define PORTA_CS_Pin GPIO_PIN_4
 #define PORTA_CS_GPIO_Port GPIOA
+#define MCU_HEARTBEAT_LED_Pin GPIO_PIN_6
+#define MCU_HEARTBEAT_LED_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
