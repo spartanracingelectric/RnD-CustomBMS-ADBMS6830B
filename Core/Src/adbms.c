@@ -178,7 +178,6 @@ void BMS_wakeUpChain()
 	for(uint32_t i = 0; i < NUM_OF_DEVICES + 1; i++)
 	{
 		BMS_csLow();
-		HAL_Delay(1); //only need microseconds delay
 		BMS_csHigh();
 		HAL_Delay(1);
 	}
@@ -261,6 +260,13 @@ void BMS_readRegister(uint16_t command, uint32_t numDevs)
     BMS_csHigh();
 }
 
+void BMS_spiReceiveData()
+{
+
+    uint32_t packetLength = COMMAND_PACKET_SIZE_BYTES + (NUM_OF_DEVICES * REGISTER_PACKET_LENGTH);
+    HAL_SPI_Receive(&hspi1, (uint8_t *)rxBuffer, packetLength, HAL_MAX_DELAY);
+}
+
 
 void BMS_parseVoltages()
 {
@@ -279,7 +285,9 @@ void BMS_readVoltages()
 void BMS_readSerialID()
 {
 	printf("READING REGISTER\n");
-	BMS_readRegister(RDSID, NUM_OF_DEVICES);
+	BMS_sendCommand(RDSID);
+	HAL_Delay(1);
+	BMS_spiReceiveData();
     BMS_printRxBuffer(100);
 
 }
