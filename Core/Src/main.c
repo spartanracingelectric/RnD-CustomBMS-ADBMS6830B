@@ -103,13 +103,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  BMS_wakeUpChain();
-//	  BMS_readSerialID(); //test this first
-//	  HAL_Delay(100);
-	  //BMS_startCellConversions(NON_REDUNDANT_MODE, CONTINOUS_MODE, DISCHARGE_DISABLED, FILTER_RESET, CELL_OPEN_WIRE_DISABLED);
-	  //HAL_Delay(100);
-	  //BMS_readVoltages();
-	  printf("Hello World\n");
+	  BMS_wakeUpChain();
+	  BMS_startCellConversions(NON_REDUNDANT_MODE, CONTINOUS_MODE, DISCHARGE_DISABLED, FILTER_RESET, CELL_OPEN_WIRE_DISABLED);
+	  HAL_Delay(1);
+	  BMS_readSerialID(); //test this first
+	  printf("Hello World TESTING 1 2 3 \n");
 	  HAL_GPIO_TogglePin(MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */

@@ -194,6 +194,15 @@ void BMS_printRxBuffer(uint32_t numBytes)
 
 }
 
+void BMS_printTxBuffer(uint8_t *txBuffer, uint32_t numBytes)
+{
+    printf("TX Buffer (%lu bytes): ", numBytes);
+    for (uint32_t i = 0; i < numBytes; i++) {
+        printf("%02X ", txBuffer[i]);
+    }
+    printf("\n");
+}
+
 uint16_t BMS_calculateCommandPEC(uint8_t *packet, uint32_t numBytes) {
 
 	uint16_t pec = PEC_INITIAL_SEED;
@@ -217,6 +226,8 @@ void BMS_sendCommand(uint16_t command)
     txBuffer[2] = (uint8_t)(commandPEC >> BITS_IN_BYTE);
     txBuffer[3] = (uint8_t)(commandPEC);
 
+    BMS_printTxBuffer(txBuffer, COMMAND_PACKET_SIZE_BYTES);
+
     BMS_csLow();
     HAL_SPI_Transmit(&hspi1, txBuffer, COMMAND_PACKET_SIZE_BYTES, HAL_MAX_DELAY);
     BMS_csHigh();
@@ -225,6 +236,7 @@ void BMS_sendCommand(uint16_t command)
 
 void BMS_startCellConversions(ADC_MODE_REDUNDANT_E redundantMode, ADC_MODE_CONTINOUS_E continousMode, ADC_MODE_DISCHARGE_E dischargeMode, ADC_MODE_FILTER_E filterMode, ADC_MODE_CELL_OPEN_WIRE_E openWireMode)
 {
+	printf("CELL CONVERSION\n");
 	return BMS_sendCommand((uint16_t)(ADCV | redundantMode | continousMode | dischargeMode | filterMode | openWireMode));
 }
 
@@ -240,6 +252,9 @@ void BMS_readRegister(uint16_t command, uint32_t numDevs)
     uint16_t commandPEC = BMS_calculateCommandPEC(txBuffer, COMMAND_SIZE_BYTES);
     txBuffer[2] = (uint8_t)(commandPEC >> BITS_IN_BYTE);
     txBuffer[3] = (uint8_t)(commandPEC);
+
+
+    BMS_printTxBuffer(txBuffer, COMMAND_PACKET_SIZE_BYTES);
 
     BMS_csLow();
     HAL_SPI_TransmitReceive(&hspi1, txBuffer, rxBuffer, packetLength, HAL_MAX_DELAY);
@@ -263,6 +278,7 @@ void BMS_readVoltages()
 
 void BMS_readSerialID()
 {
+	printf("READING REGISTER\n");
 	BMS_readRegister(RDSID, NUM_OF_DEVICES);
     BMS_printRxBuffer(100);
 
